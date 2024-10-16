@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Startle Machine</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <script type="text/javascript" src="main.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- card related -->
+    <meta property="og:title" content="Startle Machine">
+    <meta property="og:description" content="Generates silence occasionally broken up by random sound effects">
+    <meta property="org:url" content="https://prank.klemek.fr">
+    <!--
+    <meta property="og:image" content="https://.../preview_640x320.jpg">
+    -->
+</head>
+<body>
+    <main id="app" style="display:none">
+        <h1>Startle Machine</h1>
+        <br>
+        <button @click="start">Start</button>
+        <button @click="selectAll">Select all</button>
+        <button @click="deselectAll">Deselect all</button>
+        <br>
+        <div style="display:flex;flex-flow: row wrap;">
+            <div style="width: 33%; padding: .5em;" v-for="sound in sounds">
+                <input v-bind:id="`active-${sound.id}`" type="checkbox" v-model="sound.active">&nbsp;
+                <label v-bind:for="`active-${sound.id}`">{{ sound.name }}</label>
+            </div>
+        </div>
+        <br>
+        <small><a href="https://github.com/klemek" target="_blank">@klemek</a> - <a href="https://github.com/klemek/startle-machine" target="_blank">Github Repository</a> - 2024</small>
+    </main>
+</body>
+</html>
