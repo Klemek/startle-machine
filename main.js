@@ -165,12 +165,16 @@ let app = {
       });
     },
     playRandomSound() {
-      const sound = random.element(this.sounds.filter(sound => sound.active));
-      if (sound !== null) {
-        console.log(`Playing ${sound.id}`);
-        sound.audio.playbackRate = this.randomPitch ? random.float(0.8, 1.2) : 1;
-        sound.audio.volume = this.volume / 100;
-        sound.audio.play();
+      try {
+        const sound = random.element(this.sounds.filter(sound => sound.active));
+        if (sound !== null) {
+          console.log(`Playing ${sound.id}`);
+          sound.audio.playbackRate = this.randomPitch ? random.float(0.8, 1.2) : 1;
+          sound.audio.volume = this.volume / 100;
+          sound.audio.play();
+        }
+      } catch (error) {
+        console.error(error);
       }
       this.trigger();
     },
