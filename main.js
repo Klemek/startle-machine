@@ -136,11 +136,6 @@ let app = {
     },
     start() {
       if (!this.started) {
-        const audioCtx = new AudioContext();
-        this.sounds.forEach(sound => {
-          const source = audioCtx.createMediaElementSource(sound.audio);
-          source.connect(audioCtx.destination);
-        });
         this.trigger();
         if (this.hidePrank) {
           this.hideApp();
