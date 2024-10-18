@@ -183,11 +183,12 @@ let app = {
     const self = this;
     setTimeout(this.showApp);
     this.loadSounds();
-    document.addEventListener("visibilitychange", function () {
+    document.addEventListener("visibilitychange", () => {
       if (!document.hidden) {
         self.onFocus();
       }
     });
+    document.addEventListener("beforeunload", self.onFocus);
   },
 };
 
