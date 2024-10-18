@@ -65,8 +65,8 @@ let app = {
     return {
       sounds: [],
       started: false,
-      minDelay: 15,
-      maxDelay: 45,
+      minDelay: 5,
+      maxDelay: 10,
       volume: 50,
       randomPitch: true,
       hidePrank: true,
@@ -75,7 +75,11 @@ let app = {
       fakes: FAKES,
     };
   },
-  computed: {},
+  computed: {
+    canStart() {
+      return this.sounds.filter(sound => sound.active).length > 0;
+    },
+  },
   watch: {
     minDelay() {
       this.maxDelay = Math.max(this.minDelay, this.maxDelay);
@@ -146,9 +150,9 @@ let app = {
     },
     trigger() {
       this.started = true;
-      const time = random.int(this.minDelay, this.maxDelay);
-      console.log(`Next in ${time} minutes`);
-      setTimeout(this.playRandomSound, time * 60 * 1000);
+      const time = random.int(this.minDelay * 60 * 1000, this.maxDelay * 60 * 1000);
+      console.log(`Next in ${Math.round(time / (60 * 1000))} minutes`);
+      setTimeout(this.playRandomSound, time);
     },
     selectAll() {
       this.sounds.forEach(sound => {

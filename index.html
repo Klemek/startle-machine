@@ -16,7 +16,7 @@
     <main id="app" style="display:none">
         <h1>Startle Machine</h1>
         <p>Generates silence occasionally broken up by random sound effects.<br>Click the button below and leave this tab to start the prank.</p>
-        <button class="start" :disabled="started" @click="start">{{ started ? 'You can leave this tab now...' : 'Start the prank' }}</button>
+        <button class="start" :disabled="started || !canStart" @click="start">{{ started ? 'You can leave this tab now...' : (canStart ? 'Start the prank' : 'Select at least one sound') }}</button>
         <br>
         <h2>Configuration</h2>
         <table class="config">
@@ -27,12 +27,12 @@
             </colgroup>
             <tr>
                 <td><label for="minDelay">Minimum delay:</label></td>
-                <td><input id="minDelay" type="range" v-model="minDelay" min="1" max="120" /></td>
+                <td><input id="minDelay" type="range" v-model="minDelay" min="1" max="60" /></td>
                 <td>{{ minDelay }} minutes</td>
             </tr>
             <tr>
                 <td><label for="maxDelay">Maximum delay:</label></td>
-                <td><input id="maxDelay" type="range" v-model="maxDelay" min="1" max="120" /></td>
+                <td><input id="maxDelay" type="range" v-model="maxDelay" min="1" max="60" /></td>
                 <td>{{ maxDelay }} minutes</td>
             </tr>
             <tr>
