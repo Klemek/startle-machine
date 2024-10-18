@@ -227,6 +227,7 @@ button:active {
   position: absolute;
   top: .25em;
   left: .25em;
+  font-size: small;
 }
 
 .sound-container button.inactive::before {
@@ -248,7 +249,7 @@ table.config td:first-child {
   text-align: right;
 }
 
-table.config input {
+table.config input, table.config select {
   width: 100%;
 }
 

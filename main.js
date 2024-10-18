@@ -28,6 +28,23 @@ const SOUNDS = [
   { id: 'wrong_buzzer', name: 'Wrong Buzzer' },
 ];
 
+const FAKES = [
+  { name: 'Google Search', url: 'https://google.com/' },
+  { name: 'Stack Overflow', url: 'https://stackoverflow.com/' },
+  { name: 'Discord', url: 'https://app.discord.com/', favicon: './favicons/discord.ico' },
+  { name: 'Gmail', url: 'https://mail.google.com/', title: 'Inbox - Gmail', favicon: './favicons/gmail.ico' },
+  { name: 'Google Drive', url: 'https://drive.google.com/' },
+  { name: 'Github', url: 'https://github.com/' },
+  { name: 'Reddit', url: 'https://reddit.com/', title: 'Reddit - Dive into anything' },
+  { name: 'Wikipedia', url: 'https://wikipedia.org/' },
+  { name: 'Facebook', url: 'https://facebook.com/' },
+  { name: 'YouTube', url: 'https://youtube.com/' },
+  { name: 'LinkedIn', url: 'https://linkedin.com/' },
+  { name: 'Instagram', url: 'https://instagram.com/', favicon: './favicons/instagram.png' },
+  { name: 'WhatsApp', url: 'https://web.whatsapp.com/', favicon: './favicons/whatsapp.ico' },
+  { name: 'X', url: 'https://x.com/', title: 'Home / X' },
+];
+
 const random = {
   element: function (array) {
     if (array.length == 0) {
@@ -53,6 +70,9 @@ let app = {
       volume: 50,
       randomPitch: true,
       hidePrank: true,
+      redirect: true,
+      fakeId: 0,
+      fakes: FAKES,
     };
   },
   computed: {},
@@ -63,6 +83,9 @@ let app = {
     maxDelay() {
       this.minDelay = Math.min(this.minDelay, this.maxDelay);
     },
+    fakeId() {
+      this.disguise();
+    },
   },
   methods: {
     showApp() {
@@ -72,11 +95,28 @@ let app = {
       document.getElementById("app").setAttribute("style", "display:none");
       document.body.setAttribute("style", "background: none");
     },
-    onBlur() {
-      // TODO
-    },
     onFocus() {
-      // TODO
+      if (this.started && this.redirect) {
+        window.location.href = FAKES[this.fakeId].url;
+      }
+    },
+    clearFavicon() {
+      const oldLink = document.getElementById('dynamic-favicon');
+      if (oldLink) {
+        document.head.removeChild(oldLink);
+      }
+    },
+    changeFavicon(src) {
+      document.head = document.head || document.getElementsByTagName('head')[0];
+      const link = document.createElement('link');
+      const oldLink = document.getElementById('dynamic-favicon');
+      link.id = 'dynamic-favicon';
+      link.rel = 'shortcut icon';
+      link.href = src;
+      if (oldLink) {
+        document.head.removeChild(oldLink);
+      }
+      document.head.appendChild(link);
     },
     loadSounds() {
       this.sounds = SOUNDS.map(sound => {
@@ -85,6 +125,10 @@ let app = {
         sound.active = true;
         return sound;
       });
+    },
+    disguise() {
+      this.changeFavicon(FAKES[this.fakeId].favicon ?? FAKES[this.fakeId].url + 'favicon.ico');
+      document.title = FAKES[this.fakeId].title ?? FAKES[this.fakeId].name;
     },
     start() {
       if (!this.started) {
@@ -97,6 +141,7 @@ let app = {
         if (this.hidePrank) {
           this.hideApp();
         }
+        this.disguise();
       }
     },
     trigger() {
@@ -131,9 +176,7 @@ let app = {
     setTimeout(this.showApp);
     this.loadSounds();
     document.addEventListener("visibilitychange", function () {
-      if (document.hidden) {
-        self.onBlur();
-      } else {
+      if (!document.hidden) {
         self.onFocus();
       }
     });

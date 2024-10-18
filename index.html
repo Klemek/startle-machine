@@ -11,9 +11,6 @@
     <meta property="og:title" content="Startle Machine">
     <meta property="og:description" content="Generates silence occasionally broken up by random sound effects">
     <meta property="org:url" content="https://prank.klemek.fr">
-    <!--
-    <meta property="og:image" content="https://.../preview_640x320.jpg">
-    -->
 </head>
 <body>
     <main id="app" style="display:none">
@@ -44,13 +41,26 @@
                 <td>{{ volume }}%</td>
             </tr>
             <tr>
-                <td colspan="3">
-                    <button :class="randomPitch ? '' : 'inactive'" @click="randomPitch = !randomPitch">Random pitch: {{ randomPitch ? '✅' : '❌' }}</button>
+                <td><label for="disguise">Disguise as:</label></td>
+                <td colspan="2">
+                    <select v-model="fakeId">
+                        <option v-for="fake, i in fakes" :value="i">{{ fake.name }} ({{ fake.url }})</option>
+                    </select>
                 </td>
             </tr>
             <tr>
                 <td colspan="3">
-                    <button :class="hidePrank ? '' : 'inactive'" @click="hidePrank = !hidePrank">Blank page on start: {{ hidePrank ? '✅' : '❌' }}</button>
+                    <button title="Change sound pitch on every play" :class="randomPitch ? '' : 'inactive'" @click="randomPitch = !randomPitch">Random pitch: {{ randomPitch ? '✅' : '❌' }}</button>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="3">
+                    <button title="Clear page content on start" :class="hidePrank ? '' : 'inactive'" @click="hidePrank = !hidePrank">Blank page on start: {{ hidePrank ? '✅' : '❌' }}</button>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="3">
+                    <button title="Redirect to another page when prank is found" :class="redirect ? '' : 'inactive'" @click="redirect = !redirect">Redirect when found: {{ redirect ? '✅' : '❌' }}</button>
                 </td>
             </tr>
         </table>
