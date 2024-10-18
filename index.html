@@ -18,16 +18,45 @@
 <body>
     <main id="app" style="display:none">
         <h1>Startle Machine</h1>
+        <p>Generates silence occasionally broken up by random sound effects.<br>Click the button below and leave this tab to start the prank.</p>
+        <button class="start" :disabled="started" @click="start">{{ started ? 'You can leave this tab now...' : 'Start the prank' }}</button>
         <br>
-        <button @click="start">Start</button>
-        <button @click="selectAll">Select all</button>
-        <button @click="deselectAll">Deselect all</button>
-        <br>
-        <div style="display:flex;flex-flow: row wrap;">
-            <div style="width: 33%; padding: .5em;" v-for="sound in sounds">
-                <input v-bind:id="`active-${sound.id}`" type="checkbox" v-model="sound.active">&nbsp;
-                <label v-bind:for="`active-${sound.id}`">{{ sound.name }}</label>
-            </div>
+        <h2>Configuration</h2>
+        <table class="config">
+            <colgroup>
+                <col style="width: 25%">
+                <col>
+                <col style="width: 25%">
+            </colgroup>
+            <tr>
+                <td><label for="minDelay">Minimum delay:</label></td>
+                <td><input id="minDelay" type="range" v-model="minDelay" min="1" max="120" /></td>
+                <td>{{ minDelay }} minutes</td>
+            </tr>
+            <tr>
+                <td><label for="maxDelay">Maximum delay:</label></td>
+                <td><input id="maxDelay" type="range" v-model="maxDelay" min="1" max="120" /></td>
+                <td>{{ maxDelay }} minutes</td>
+            </tr>
+            <tr>
+                <td><label for="volume">Volume:</label></td>
+                <td><input id="volume" type="range" v-model="volume" min="0" max="100" /></td>
+                <td>{{ volume }}%</td>
+            </tr>
+            <tr>
+                <td colspan="3">
+                    <button :class="randomPitch ? '' : 'inactive'" @click="randomPitch = !randomPitch">Random pitch: {{ randomPitch ? '✅' : '❌' }}</button>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="3">
+                    <button :class="hidePrank ? '' : 'inactive'" @click="hidePrank = !hidePrank">Blank page on start: {{ hidePrank ? '✅' : '❌' }}</button>
+                </td>
+            </tr>
+        </table>
+        <h3>Sounds <small><a href="#" @click="selectAll">Select all</a> - <a href="#" @click="unselectAll">Unselect all</a></small></h3>
+        <div class="sound-container">
+            <button v-for="sound in sounds" :class="sound.active ? '' : 'inactive'"  @click="sound.active = !sound.active">{{ sound.name }}</button>
         </div>
         <br>
         <small><a href="https://github.com/klemek" target="_blank">@klemek</a> - <a href="https://github.com/klemek/startle-machine" target="_blank">Github Repository</a> - 2024</small>

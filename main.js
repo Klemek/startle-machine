@@ -47,19 +47,32 @@ let app = {
   data() {
     return {
       sounds: [],
+      started: false,
+      minDelay: 15,
+      maxDelay: 45,
+      volume: 50,
+      randomPitch: true,
+      hidePrank: true,
     };
   },
-  computed: {
-    currentYear() {
-      return new Date().getFullYear();
+  computed: {},
+  watch: {
+    minDelay() {
+      this.maxDelay = Math.max(this.minDelay, this.maxDelay);
+    },
+    maxDelay() {
+      this.minDelay = Math.min(this.minDelay, this.maxDelay);
     },
   },
   methods: {
     showApp() {
       document.getElementById("app").setAttribute("style", "");
     },
+    hideApp() {
+      document.getElementById("app").setAttribute("style", "display:none");
+      document.body.setAttribute("style", "background: none");
+    },
     onBlur() {
-      // TODO document.getElementById("app").setAttribute("style", "display:none");
       // TODO
     },
     onFocus() {
@@ -74,24 +87,30 @@ let app = {
       });
     },
     start() {
-      const audioCtx = new AudioContext();
-      this.sounds.forEach(sound => {
-        const source = audioCtx.createMediaElementSource(sound.audio);
-        source.connect(audioCtx.destination);
-      });
-      this.trigger();
+      if (!this.started) {
+        const audioCtx = new AudioContext();
+        this.sounds.forEach(sound => {
+          const source = audioCtx.createMediaElementSource(sound.audio);
+          source.connect(audioCtx.destination);
+        });
+        this.trigger();
+        if (this.hidePrank) {
+          this.hideApp();
+        }
+      }
     },
     trigger() {
-      const time = random.int(30, 300);
-      console.log(`Next in ${time} seconds`);
-      setTimeout(this.playRandomSound, time * 1000);
+      this.started = true;
+      const time = random.int(this.minDelay, this.maxDelay);
+      console.log(`Next in ${time} minutes`);
+      setTimeout(this.playRandomSound, time * 60 * 1000);
     },
     selectAll() {
       this.sounds.forEach(sound => {
         sound.active = true;
       });
     },
-    deselectAll() {
+    unselectAll() {
       this.sounds.forEach(sound => {
         sound.active = false;
       });
@@ -100,7 +119,8 @@ let app = {
       const sound = random.element(this.sounds.filter(sound => sound.active));
       if (sound !== null) {
         console.log(`Playing ${sound.id}`);
-        sound.audio.playbackRate = random.float(0.8, 1.2);
+        sound.audio.playbackRate = this.randomPitch ? random.float(0.8, 1.2) : 1;
+        sound.audio.volume = this.volume / 100;
         sound.audio.play();
       }
       this.trigger();
